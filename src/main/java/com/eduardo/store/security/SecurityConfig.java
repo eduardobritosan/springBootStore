@@ -1,4 +1,4 @@
-package com.eduardo.store;
+package com.eduardo.store.security;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -15,5 +15,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest()
                 .permitAll()
                 .and().csrf().disable();
+        http.headers().frameOptions().sameOrigin();
     }
 }
