@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface SupplierRepository extends CrudRepository<Supplier, Long> {
     List<Supplier> findByName(String name);
+    List<Supplier> findByCountry(String country);
 }
