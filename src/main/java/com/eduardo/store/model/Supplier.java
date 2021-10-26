@@ -2,17 +2,13 @@ package com.eduardo.store.model;
 
 import javax.persistence.*;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
-@Getter
-@Setter
-@ToString
-@AllArgsConstructor
+import java.util.List;
+
+@Data
 @Entity
-@Table(name = "supplier")
+@Table(name = "SUPPLIER")
 public class Supplier {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,4 +19,10 @@ public class Supplier {
 
     @Column(nullable = false)
     private String country;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "PRODUCT_SUPPLIER",
+        joinColumns = @JoinColumn(name = "product_id"),
+        inverseJoinColumns = @JoinColumn(name = "supplier_id"))
+    private List<Product> products;
 }

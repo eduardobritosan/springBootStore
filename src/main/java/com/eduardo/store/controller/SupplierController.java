@@ -2,7 +2,6 @@ package com.eduardo.store.controller;
 
 import com.eduardo.store.dto.SupplierDTO;
 import com.eduardo.store.model.Supplier;
-import com.eduardo.store.repo.SupplierRepository;
 import com.eduardo.store.service.ISupplierService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +30,10 @@ public class SupplierController {
     }
 
     @GetMapping("/country/{supplierCountry}")
-    public List<Supplier> findByCountry(@PathVariable String supplierCountry){
-        return supplierService.findByCountry(supplierCountry);
+    public List<SupplierDTO> findByCountry(@PathVariable String supplierCountry){
+        List<Supplier> suppliers = supplierService.findByCountry(supplierCountry);
+        return suppliers.stream().map(this::convertToDto)
+                .collect((Collectors.toList()));
     }
 
     private SupplierDTO convertToDto(Supplier supplier) {

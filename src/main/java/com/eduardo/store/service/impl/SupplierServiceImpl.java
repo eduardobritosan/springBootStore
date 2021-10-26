@@ -19,6 +19,6 @@ public class SupplierServiceImpl implements ISupplierService {
     }
 
     public List<Supplier> findByCountry(String supplierCountry){
-        return supplierRepository.findByName(supplierCountry);
+        return supplierRepository.findByCountry(supplierCountry);
     }
 }
