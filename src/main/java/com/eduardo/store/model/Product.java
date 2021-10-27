@@ -1,14 +1,18 @@
 package com.eduardo.store.model;
 
-import com.eduardo.store.enums.ProductStateEnum;
-import lombok.Data;
+        import com.eduardo.store.enums.ProductStateEnum;
+        import lombok.AllArgsConstructor;
+        import lombok.Data;
+        import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
-import java.util.Date;
-import java.util.List;
+        import javax.persistence.*;
+        import java.util.Date;
+        import java.util.List;
 
 @Data
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "PRODUCT")
 public class Product {
     @Id
@@ -16,7 +20,7 @@ public class Product {
     private Long idProduct;
 
     @Column(nullable = false, unique = true)
-    private String itemCode;
+    private Long itemCode;
 
     @Column
     private String productDescription;
@@ -34,7 +38,9 @@ public class Product {
     @Column(nullable = false)
     private String creator;
 
-    @ManyToMany(mappedBy = "products")
-    private List<Supplier> suppliers;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true,
+            mappedBy = "product")
+    private List<ProductSupplier> suppliers;
 
 }

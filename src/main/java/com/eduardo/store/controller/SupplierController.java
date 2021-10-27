@@ -1,14 +1,12 @@
 package com.eduardo.store.controller;
 
 import com.eduardo.store.dto.SupplierDTO;
-import com.eduardo.store.model.Supplier;
 import com.eduardo.store.service.ISupplierService;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "http://localhost:8082")
 @RestController
@@ -18,26 +16,24 @@ public class SupplierController {
     @Autowired
     private ISupplierService supplierService;
 
-    @Autowired
-    private ModelMapper modelMapper;
-
     @GetMapping("/name/{supplierName}")
     @ResponseBody
     public List<SupplierDTO> findByName(@PathVariable String supplierName){
-        List<Supplier> suppliers = supplierService.findByName(supplierName);
-        return suppliers.stream().map(this::convertToDto)
-                .collect((Collectors.toList()));
+        return supplierService.findByName(supplierName);
     }
 
     @GetMapping("/country/{supplierCountry}")
     public List<SupplierDTO> findByCountry(@PathVariable String supplierCountry){
-        List<Supplier> suppliers = supplierService.findByCountry(supplierCountry);
-        return suppliers.stream().map(this::convertToDto)
-                .collect((Collectors.toList()));
+        return supplierService.findByCountry(supplierCountry);
     }
 
-    private SupplierDTO convertToDto(Supplier supplier) {
-        return modelMapper.map(supplier, SupplierDTO.class);
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
+    public SupplierDTO save(@RequestBody SupplierDTO supplier){
+        return supplierService.save(supplier);
     }
+
+
 
 }

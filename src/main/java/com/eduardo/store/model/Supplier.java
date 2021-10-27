@@ -20,9 +20,7 @@ public class Supplier {
     @Column(nullable = false)
     private String country;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "PRODUCT_SUPPLIER",
-        joinColumns = @JoinColumn(name = "product_id"),
-        inverseJoinColumns = @JoinColumn(name = "supplier_id"))
-    private List<Product> products;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true,
+            mappedBy = "supplier")
+    private List<ProductSupplier> products;
 }
