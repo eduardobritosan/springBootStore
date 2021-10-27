@@ -1,6 +1,7 @@
 package com.eduardo.store.service.impl;
 
 import com.eduardo.store.dto.ProductDTO;
+import com.eduardo.store.enums.ProductStateEnum;
 import com.eduardo.store.model.Product;
 import com.eduardo.store.repo.ProductRepository;
 import com.eduardo.store.service.IProductService;
@@ -48,6 +49,16 @@ public class ProductServiceImpl implements IProductService {
         productRepository.deleteByItemCode(itemCode);
     }
 
+    public ProductDTO deactivate(Long itemCode) {
+        if(existsItemCode(itemCode)) {
+            ProductDTO foundProductDTO = findByItemCode(itemCode).get(0);
+            foundProductDTO.setState(ProductStateEnum.DISCONTINUED);
+            update(foundProductDTO, itemCode);
+            return foundProductDTO;
+        }
+        return null;
+    }
+
     public ProductDTO update(ProductDTO productDTO, Long itemCode) {
         if (!Objects.equals(productDTO.getItemCode(), itemCode)) {
             throw new IllegalArgumentException();
@@ -74,6 +85,10 @@ public class ProductServiceImpl implements IProductService {
     }
 
     private boolean exists(ProductDTO product) {
-        return findByItemCode(product.getItemCode()).size() == 1;
+        return existsItemCode(product.getItemCode());
+    }
+
+    private boolean existsItemCode(Long itemCode) {
+        return findByItemCode(itemCode).size() == 1;
     }
 }

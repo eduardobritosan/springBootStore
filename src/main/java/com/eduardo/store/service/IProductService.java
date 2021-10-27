@@ -11,4 +11,5 @@ public interface IProductService {
     ProductDTO save(ProductDTO product);
     ProductDTO update(ProductDTO productDTO, Long itemCode);
     void deleteByItemCode(Long itemCode);
+    ProductDTO deactivate(Long itemCode);
 }

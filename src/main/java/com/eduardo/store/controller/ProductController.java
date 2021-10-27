@@ -57,6 +57,12 @@ public class ProductController {
     public void delete(@PathVariable Long itemCode){
         productService.deleteByItemCode(itemCode);
     }
+
+    @PutMapping({"/deactivate/{itemCode}"})
+    @ResponseBody
+    public ProductDTO deactivate(@PathVariable Long itemCode) {
+        return productService.deactivate(itemCode);
+    }
 }
 
 
