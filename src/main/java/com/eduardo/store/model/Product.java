@@ -22,20 +22,20 @@ public class Product {
     @Column(nullable = false, unique = true)
     private Long itemCode;
 
-    @Column
+    @Column(nullable = false)
     private String productDescription;
 
     @Column
     private Double price;
 
-    @Column(nullable = false)
+    @Column(columnDefinition = "varchar(255) default 'ACTIVE'")
     @Enumerated(EnumType.STRING)
     private ProductStateEnum state;
 
-    @Column(nullable = false)
+    @Column
     private Date creationDate;
 
-    @Column(nullable = false)
+    @Column
     private String creator;
 
 

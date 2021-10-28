@@ -20,6 +20,9 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -57,8 +60,11 @@ public class ProductServiceImpl implements IProductService {
     }
 
     public ProductDTO save(ProductDTO product) {
-        if(!exists(product))
+        if(!exists(product)) {
+            Date localDate = Date.from(LocalDate.now().atStartOfDay(ZoneId.of("GMT+01:00")).toInstant());
+            product.setCreationDate(localDate);
             return convertToDto(productRepository.save(convertToPojo(product)));
+        }
         return null;
     }
 

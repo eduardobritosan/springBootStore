@@ -1,5 +1,5 @@
 insert into product values(null, TO_DATE('17/12/2015', 'DD/MM/YYYY'), 'Richard Garfield', '123', 1200.5
-    , 'Black Lotus', 'ACTIVE' );
+    , 'Black Lotus', 'DISCONTINUED' );
 insert into product values(null, TO_DATE('17/12/2015', 'DD/MM/YYYY'), 'Richard Garfield', '124', 100.5
    , 'Mana Crypt', 'ACTIVE' );
 
