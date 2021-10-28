@@ -15,6 +15,7 @@ import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -36,7 +37,8 @@ public class ProductServiceImpl implements IProductService {
     }
 
     public List<ProductDTO> findByState(String state) {
-        return productRepository.findByState(state).stream().map(this::convertToDto).collect(Collectors.toList());
+        return productRepository.findByState(ProductStateEnum.valueOf(state.toUpperCase(Locale.ROOT))).
+                stream().map(this::convertToDto).collect(Collectors.toList());
     }
 
     public ProductDTO save(ProductDTO product) {

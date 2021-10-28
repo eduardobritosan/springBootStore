@@ -10,30 +10,28 @@ import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:8082")
 @RestController
-@RequestMapping("/api/supplier")
+@RequestMapping("/store")
 public class SupplierController {
 
     @Autowired
     private ISupplierService supplierService;
 
-    @GetMapping("/name/{supplierName}")
+    @GetMapping("/suppliers")
     @ResponseBody
-    public List<SupplierDTO> findByName(@PathVariable String supplierName){
+    public List<SupplierDTO> getByName(@RequestParam String supplierName){
         return supplierService.findByName(supplierName);
     }
 
-    @GetMapping("/country/{supplierCountry}")
-    public List<SupplierDTO> findByCountry(@PathVariable String supplierCountry){
+    @GetMapping("/suppliers/country")
+    @ResponseBody
+    public List<SupplierDTO> getByCountry(@RequestParam String supplierCountry){
         return supplierService.findByCountry(supplierCountry);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public SupplierDTO save(@RequestBody SupplierDTO supplier){
+    public SupplierDTO create(@RequestBody SupplierDTO supplier){
         return supplierService.save(supplier);
     }
-
-
-
 }
