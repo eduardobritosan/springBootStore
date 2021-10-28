@@ -1,13 +1,13 @@
 package com.eduardo.store.model;
 
-        import com.eduardo.store.enums.ProductStateEnum;
-        import lombok.AllArgsConstructor;
-        import lombok.Data;
-        import lombok.NoArgsConstructor;
+import com.eduardo.store.enums.ProductStateEnum;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-        import javax.persistence.*;
-        import java.util.Date;
-        import java.util.List;
+import javax.persistence.*;
+import java.util.Date;
+import java.util.List;
 
 @Data
 @Entity
@@ -20,7 +20,7 @@ public class Product {
     private Long idProduct;
 
     @Column(nullable = false, unique = true)
-    private Long itemCode;
+    private Long productCode;
 
     @Column(nullable = false)
     private String productDescription;
@@ -38,9 +38,12 @@ public class Product {
     @Column
     private String creator;
 
-
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true,
             mappedBy = "product")
     private List<ProductSupplier> suppliers;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true,
+            mappedBy = "product")
+    private List<PriceReduction> priceReductions;
 
 }
