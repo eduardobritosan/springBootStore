@@ -30,7 +30,7 @@ public class ProductController {
             return ResponseEntity.ok(productService.findByItemCode(productItemCode));
         } else if (!(productState == null || productService.findByState(productState).isEmpty())) {
             return ResponseEntity.ok(productService.findByState(productState));
-        } else if (!productService.findAll().isEmpty()) {
+        } else if (!productService.findAll().isEmpty() && productState == null && productItemCode == null) {
             return ResponseEntity.ok(productService.findAll());
         }
         return ResponseEntity.badRequest().build();
