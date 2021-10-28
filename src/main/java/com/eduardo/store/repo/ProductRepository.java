@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findAll();
-    List<Product> findByItemCode(Long itemCode);
+    List<Product> findByProductCode(Long itemCode);
     List<Product> findByState(ProductStateEnum state);
-    void deleteByItemCode(Long itemCode);
+    void deleteByProductCode(Long itemCode);
 }

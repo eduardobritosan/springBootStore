@@ -8,8 +8,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductSupplierDTO {
-    private Long idProductSupplier;
-    private Long productSupplierCode;
-    private ProductDTO productDTO;
     private SupplierDTO supplierDTO;
 }

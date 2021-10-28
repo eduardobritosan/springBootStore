@@ -20,7 +20,7 @@ public class ProductSupplier {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idProductSupplier;
 
-    @ToString.Exclude
+
     @ManyToOne
     @JoinColumn(name = "product_id")
     @JsonIgnoreProperties("suppliers")
