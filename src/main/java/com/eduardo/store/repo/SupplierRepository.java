@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface SupplierRepository extends JpaRepository<Supplier, Long> {
     List<Supplier> findAll();
+    List<Supplier> findBySupplierCode(Long supplierCode);
     List<Supplier> findByName(String name);
     List<Supplier> findByCountry(String country);
 }

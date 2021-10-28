@@ -1,6 +1,7 @@
 package com.eduardo.store.controller;
 
 import com.eduardo.store.dto.ProductDTO;
+import com.eduardo.store.dto.SupplierDTO;
 import com.eduardo.store.service.IProductService;
 import com.eduardo.store.service.ISupplierService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,6 +74,16 @@ public class ProductController {
             return ResponseEntity.badRequest().build();
         }
         return ResponseEntity.ok(productService.deactivate(itemCode));
+    }
+
+    @PutMapping("/new-supplier/{itemCode}")
+    @ResponseBody
+    public ResponseEntity<ProductDTO> putSupplier(@RequestBody SupplierDTO supplierDTO,
+                                                  @PathVariable Long itemCode) {
+        if (supplierDTO == null || itemCode == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(productService.addSupplier(supplierDTO, itemCode));
     }
 }
 

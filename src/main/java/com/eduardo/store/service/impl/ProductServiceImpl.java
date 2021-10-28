@@ -1,10 +1,16 @@
 package com.eduardo.store.service.impl;
 
 import com.eduardo.store.dto.ProductDTO;
+import com.eduardo.store.dto.SupplierDTO;
 import com.eduardo.store.enums.ProductStateEnum;
 import com.eduardo.store.model.Product;
+import com.eduardo.store.model.ProductSupplier;
+import com.eduardo.store.model.Supplier;
 import com.eduardo.store.repo.ProductRepository;
+import com.eduardo.store.repo.ProductSupplierRepository;
+import com.eduardo.store.repo.SupplierRepository;
 import com.eduardo.store.service.IProductService;
+import com.eduardo.store.service.ISupplierService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +30,15 @@ import java.util.stream.Collectors;
 public class ProductServiceImpl implements IProductService {
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private SupplierRepository supplierRepository;
+
+    @Autowired
+    private ISupplierService supplierService;
+
+    @Autowired
+    private ProductSupplierRepository productSupplierRepository;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -74,6 +89,19 @@ public class ProductServiceImpl implements IProductService {
             }
         } catch(EntityExistsException | EntityNotFoundException e) {
             e.printStackTrace();
+        }
+        return null;
+    }
+
+    public ProductDTO addSupplier(SupplierDTO supplierDTO, Long itemCode) {
+        if(existsItemCode(itemCode) &&
+                (supplierRepository.findBySupplierCode(supplierDTO.getSupplierCode()).isEmpty())) {
+            Product product = productRepository.findByItemCode(itemCode).get(0);
+            Supplier supplier = supplierService.convertToPojo(supplierDTO);
+            supplierRepository.save(supplier);
+            ProductSupplier productSupplier = new ProductSupplier(null, product, supplier);
+            productSupplierRepository.save(productSupplier);
+            return convertToDto(productRepository.findByItemCode(itemCode).get(0));
         }
         return null;
     }

@@ -1,6 +1,7 @@
 package com.eduardo.store.service;
 
 import com.eduardo.store.dto.ProductDTO;
+import com.eduardo.store.dto.SupplierDTO;
 
 import java.util.List;
 
@@ -12,4 +13,5 @@ public interface IProductService {
     ProductDTO update(ProductDTO productDTO, Long itemCode);
     void deleteByItemCode(Long itemCode);
     ProductDTO deactivate(Long itemCode);
+    ProductDTO addSupplier(SupplierDTO supplierDTO, Long itemCode);
 }

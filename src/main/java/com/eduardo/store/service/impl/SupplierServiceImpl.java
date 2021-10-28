@@ -30,15 +30,20 @@ public class SupplierServiceImpl implements ISupplierService {
                 .collect(Collectors.toList());
     }
 
+    public List<SupplierDTO> findSupplierCode(Long supplierCode) {
+        return supplierRepository.findBySupplierCode(supplierCode).stream().map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
     public SupplierDTO save(SupplierDTO supplier){
         return convertToDto(supplierRepository.save(convertToPojo(supplier)));
     }
 
-    private SupplierDTO convertToDto(Supplier supplier) {
+    public SupplierDTO convertToDto(Supplier supplier) {
         return modelMapper.map(supplier, SupplierDTO.class);
     }
 
-    private Supplier convertToPojo(SupplierDTO supplierDTO) {
+    public Supplier convertToPojo(SupplierDTO supplierDTO) {
         return modelMapper.map(supplierDTO, Supplier.class);
     }
 }
