@@ -131,10 +131,12 @@ public class ProductServiceImpl implements IProductService {
                 (priceReductionRepository.findByPriceReductionCode(priceReductionDTO.getPriceReductionCode())
                         .isEmpty())) {
             Product product = productRepository.findByProductCode(productCode).get(0);
-            PriceReduction priceReduction = priceReductionService.convertToPojo(priceReductionDTO);
-            priceReduction.setProduct(product);
-            priceReductionRepository.save(priceReduction);
-            return convertToDto(productRepository.findByProductCode(productCode).get(0));
+            if((!checkPriceReductionOverlap(priceReductionDTO, product)) && checkDateValidity(priceReductionDTO)){
+                PriceReduction priceReduction = priceReductionService.convertToPojo(priceReductionDTO);
+                priceReduction.setProduct(product);
+                priceReductionRepository.save(priceReduction);
+                return convertToDto(productRepository.findByProductCode(productCode).get(0));
+            }
         }
         return null;
     }
@@ -157,5 +159,20 @@ public class ProductServiceImpl implements IProductService {
 
     private boolean existsItemCode(Long productCode) {
         return findByProductCode(productCode).size() == 1;
+    }
+
+    private boolean checkPriceReductionOverlap(PriceReductionDTO priceReductionDTO, Product product) {
+        final boolean[] overlaps = {false};
+        product.getPriceReductions().forEach(priceReduction -> {
+            if((priceReduction.getStartDate().before(priceReductionDTO.getEndDate()))
+            && priceReduction.getEndDate().after(priceReductionDTO.getStartDate())) {
+                overlaps[0] = true;
+            }
+        });
+        return overlaps[0];
+    }
+
+    private boolean checkDateValidity(PriceReductionDTO priceReductionDTO) {
+        return priceReductionDTO.getStartDate().before(priceReductionDTO.getEndDate());
     }
 }
