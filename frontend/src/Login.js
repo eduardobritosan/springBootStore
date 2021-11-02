@@ -6,10 +6,21 @@ class Login extends Component {
     super();
 
     this.state = {
-      username: "",
-      password: ""
+      username: '',
+      password: ''
     };
     this.handleFormSubmit = this.handleFormSubmit.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
+  }
+
+  handleInputChange = event => {
+    const target = event.target;
+    const value = target.value;
+    const name = target.name;
+
+    this.setState({
+      [name]: value
+    });
   }
 
   handleFormSubmit = event => {
@@ -33,7 +44,7 @@ class Login extends Component {
 
   handleProductList() {
     axios.get("http://localhost:8082/products").then(res => {
-      if (res.data === "success") {
+      if (res.status === 200) {
         this.props.history.push("/products");
       } else {
         alert("Authentication failure");
@@ -50,13 +61,19 @@ class Login extends Component {
             <div className="form-group">
               <input type="text"
                 className="form-control"
-                placeholder="User name"
+                placeholder="Username"
+                name="username"
+                value={this.state.username}
+                onChange={this.handleInputChange}
               />
             </div>
             <div className="form-group">
               <input type="password"
                 className="form-control"
-                placeholder="password"
+                placeholder="Password"
+                name="password"
+                value={this.state.password}
+                onChange={this.handleInputChange}
               />
             </div>
             <button className="btn btn-lg btn-primary btn-block" type="submit">
