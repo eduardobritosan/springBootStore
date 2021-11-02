@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import "./App.css";
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import interceptors from "../src/Interceptors";
-import Login from "./Login";
+import Login from "./components/Login";
 
 class App extends Component {
   render() {
