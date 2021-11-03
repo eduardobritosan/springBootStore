@@ -6,6 +6,8 @@ const getPublicContent = () => {
   return axios.get(API_URL);
 };
 
-export default {
-  getPublicContent,
+const ProductService = {
+  getPublicContent
 };
+
+export default ProductService;
