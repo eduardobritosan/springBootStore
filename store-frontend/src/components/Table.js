@@ -14,13 +14,12 @@ const Table = () => {
     setProducts(response.data)
   }
 
-  /*   const removeData = (id) => {
-  
-      axios.delete(`${URL}/${id}`).then(res => {
-        const del = products.filter(products => id !== products.id)
-        setProducts(del)
-      })
-    } */
+  const deactivate = (productCode) => {
+
+    ProductService.deactivate({productCode}).then(res => {
+      getData()
+    })
+  }
 
   const renderHeader = () => {
     let headerElement = ['name', 'price', 'status',
@@ -42,7 +41,7 @@ const Table = () => {
           <td>{new Date(creationDate).toLocaleDateString()}</td>
           <td>{creator}</td>
           <td className='opration'>
-            <button className='button' > Delete</button>
+            <button className='button' onClick={() => deactivate(productCode)} >Deactivate</button>
           </td>
         </tr >
       )
