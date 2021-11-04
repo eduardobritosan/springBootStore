@@ -1,6 +1,7 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useRef} from 'react'
 import {Modal} from 'react-bootstrap';
 import ProductService from "../services/product.service";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 
 const Table = () => {
@@ -12,6 +13,20 @@ const Table = () => {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
+  const productDescription = useRef(null);
+  const price = useRef(null);
+  const productCode = useRef(null);
+  const creator = useRef(null);
+  const state = useRef(null);
+  const creationDate = useRef(null);
+
+  const newClientTest = {
+    "productCode": 1244,
+    "productDescription": "Timespiral",
+    "price": 255000,
+    "state": "ACTIVE",
+    "creator": "Richard Garfield"
+  }
 
   useEffect(() => {
     getData()
@@ -23,7 +38,6 @@ const Table = () => {
   }
 
   const deactivate = (productCode) => {
-
     ProductService.deactivate({productCode}).then(res => {
       getData()
     })
@@ -40,13 +54,69 @@ const Table = () => {
     setShowModal(handleShow);
   }
 
-  const ModalContent = () => {
+  const handleInputChange = (event) => {
+
+  }
+
+  const handleSubmit = (event) => {
+    const newProduct = {
+      productCode: productCode.current.value,
+      productDescription: productDescription.current.value,
+      price: price.current.value,
+      state: state.current.value,
+      creationDate: Date.parse(creationDate.current.value),
+      creator: creator.current.value
+    }
+    ProductService.editProduct(newProduct.productCode, newProduct).then(() => {
+      getData();
+    });
+
+  }
+
+  const DetailsModalContent = () => {
     return (
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>{modalInfo[0].productDescription}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          <form onSubmit={handleSubmit}>
+            <label>
+              Product code:
+              <br />
+              <input type="text" id="noneditable" ref={productCode} value={modalInfo[0].productCode} onChange={handleInputChange} />
+            </label>
+            <label>
+              Name:
+              <br />
+              <input type="text" ref={productDescription} defaultValue={modalInfo[0].productDescription} onChange={handleInputChange} />
+            </label>
+            <label>
+              Price:
+              <br />
+              <input type="text" ref={price} defaultValue={modalInfo[0].price} onChange={handleInputChange} />
+            </label>
+            <label>
+              Status:
+              <br />
+              <select defaultValue={modalInfo[0].state} ref={state} onChange={handleInputChange}>
+                <option value="ACTIVE">ACTIVE</option>
+                <option value="DISCONTINUED">DISCONTINUED</option>
+              </select>
+            </label>
+            <label>
+              Creation date:
+              <br />
+              <input type="text" defaultValue={new Date(modalInfo[0].creationDate).toLocaleDateString()} ref={creationDate} onChange={handleInputChange} />
+            </label>
+            <label>
+              Creator:
+              <br />
+              <input type="text" defaultValue={modalInfo[0].creator} ref={creator} onChange={handleInputChange} />
+            </label>
+            <input className="button" type="submit" value="Submit" />
+          </form>
+          <hr />
           <h4>Suppliers</h4>
           <table id='product'>
             <thead>
@@ -56,6 +126,7 @@ const Table = () => {
               {renderSuppliers(modalInfo[0].suppliers)}
             </tbody>
           </table>
+          <hr />
           <h4>Price reductions</h4>
           <table id='product'>
             <thead>
@@ -88,8 +159,6 @@ const Table = () => {
     })
   }
 
-
-
   const renderHeader = () => {
     let headerElement = ['name', 'price', 'status',
       'created', 'creator', 'details', 'deactivate']
@@ -115,7 +184,7 @@ const Table = () => {
           <td className='opration'>
             <button className='button' onClick={() => deactivate(productCode)} >Deactivate</button>
           </td>
-          {show ? <ModalContent /> : null}
+          {show ? <DetailsModalContent /> : null}
         </tr >
       )
     })
@@ -154,10 +223,16 @@ const Table = () => {
         <tbody>
           {renderBody()}
         </tbody>
+        <tfoot>
+          <tr>
+            <td>
+              <button className='button' onClick={() => ProductService.createProduct(newClientTest)} >Create new product</button>
+            </td>
+          </tr>
+        </tfoot>
       </table>
     </>
   )
 }
-
 
 export default Table

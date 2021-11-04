@@ -216,3 +216,7 @@ table {
     opacity: 1;
   }
 }
+
+#noneditable {
+  background-color: #ddd;
+}
