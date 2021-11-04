@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react'
-import {Modal} from 'react-bootstrap';
+import {Col, Form, Modal, Row, Button} from 'react-bootstrap';
 import ProductService from "../services/product.service";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -75,47 +75,49 @@ const Table = () => {
 
   const DetailsModalContent = () => {
     return (
-      <Modal show={show} onHide={handleClose}>
+      <Modal show={show} onHide={handleClose} dialogClassName="my-modal">
         <Modal.Header closeButton>
           <Modal.Title>{modalInfo[0].productDescription}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <form onSubmit={handleSubmit}>
-            <label>
-              Product code:
-              <br />
-              <input type="text" id="noneditable" ref={productCode} value={modalInfo[0].productCode} onChange={handleInputChange} />
-            </label>
-            <label>
-              Name:
-              <br />
-              <input type="text" ref={productDescription} defaultValue={modalInfo[0].productDescription} onChange={handleInputChange} />
-            </label>
-            <label>
-              Price:
-              <br />
-              <input type="text" ref={price} defaultValue={modalInfo[0].price} onChange={handleInputChange} />
-            </label>
-            <label>
-              Status:
-              <br />
-              <select defaultValue={modalInfo[0].state} ref={state} onChange={handleInputChange}>
-                <option value="ACTIVE">ACTIVE</option>
-                <option value="DISCONTINUED">DISCONTINUED</option>
-              </select>
-            </label>
-            <label>
-              Creation date:
-              <br />
-              <input type="text" defaultValue={new Date(modalInfo[0].creationDate).toLocaleDateString()} ref={creationDate} onChange={handleInputChange} />
-            </label>
-            <label>
-              Creator:
-              <br />
-              <input type="text" defaultValue={modalInfo[0].creator} ref={creator} onChange={handleInputChange} />
-            </label>
-            <input className="button" type="submit" value="Submit" />
-          </form>
+          <Form onSubmit={handleSubmit}>
+            <Row>
+              <Col>
+                <Form.Label>Product code</Form.Label>
+                <Form.Control type="text" readOnly ref={productCode} value={modalInfo[0].productCode} onChange={handleInputChange} ></Form.Control>
+              </Col>
+              <Col>
+                <Form.Label>Product description</Form.Label>
+                <Form.Control type="text" ref={productDescription} defaultValue={modalInfo[0].productDescription} onChange={handleInputChange} ></Form.Control>
+              </Col>
+              <Col>
+                <Form.Label>Price</Form.Label>
+                <Form.Control type="text" ref={price} defaultValue={modalInfo[0].price} onChange={handleInputChange} ></Form.Control>
+              </Col>
+            </Row>
+            <br />
+            <Row>
+              <Col>
+                <Form.Label>Product code</Form.Label>
+                <Form.Select aria-label="Product status select" defaultValue={modalInfo[0].state} ref={state}>
+                  <option value="ACTIVE">ACTIVE</option>
+                  <option value="DISCONTINUED">DISCONTINUED</option>
+                </Form.Select>
+              </Col>
+              <Col>
+                <Form.Label>Product code</Form.Label>
+                <Form.Control type="date" defaultValue={modalInfo[0].creationDate} ref={creationDate} onChange={handleInputChange} ></Form.Control>
+              </Col>
+              <Col>
+                <Form.Label>Product code</Form.Label>
+                <Form.Control type="text" defaultValue={modalInfo[0].creator} ref={creator} onChange={handleInputChange} ></Form.Control>
+              </Col>
+            </Row>
+            <br />
+            <Button type="submit" className="mb-2">
+              Submit
+            </Button>
+          </Form>
           <hr />
           <h4>Suppliers</h4>
           <table id='product'>

@@ -38,13 +38,6 @@ const App = () => {
             </Link>
           </li>
 
-          {currentUser && (
-            <li className="nav-item">
-              <Link to={"/products"} className="nav-link">
-                Products
-              </Link>
-            </li>
-          )}
         </div>
 
         {currentUser ? (
@@ -60,12 +53,6 @@ const App = () => {
             <li className="nav-item">
               <Link to={"/login"} className="nav-link">
                 Login
-              </Link>
-            </li>
-
-            <li className="nav-item">
-              <Link to={"/register"} className="nav-link">
-                Sign Up
               </Link>
             </li>
           </div>
