@@ -10,32 +10,16 @@ const DetailsModalContent = (props) => {
   const handleShow = () => setShow(true);
   const [, setShowModal] = useState([]);
 
-
-  const productDescription = useRef(null);
-  const price = useRef(null);
-  const productCode = useRef(null);
-  const creator = useRef(null);
-  const state = useRef(null);
-  const creationDate = useRef(null);
-
   const toggleTrueFalse = () => {
     setShowModal(handleShow);
   }
 
   const handleInputChange = (event) => {
-    event.preventDefault();
+    props.setModalInfo((prevState) => ({...prevState, [event.target.name]: event.target.value}));
   }
 
   const handleSubmit = (event) => {
-    const newProduct = {
-      productCode: productCode.current.value,
-      productDescription: productDescription.current.value,
-      price: price.current.value,
-      state: state.current.value,
-      creationDate: Date.parse(creationDate.current.value),
-      creator: creator.current.value
-    }
-    ProductService.editProduct(newProduct.productCode, newProduct).then(() => {
+    ProductService.editProduct(props.modalInfo[0].productCode, props.modalInfo[0]).then(() => {
       props.getData();
     });
   }
@@ -86,40 +70,40 @@ const DetailsModalContent = (props) => {
   return (
     <Modal {...props} dialogClassName="my-modal">
       <Modal.Header closeButton>
-        <Modal.Title>{props.modalInfo[0].productDescription}</Modal.Title>
+        <Modal.Title>Edit product</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={handleSubmit}>
           <Row>
             <Col>
-              <Form.Label>Product code</Form.Label>
-              <Form.Control type="text" readOnly ref={productCode} value={props.modalInfo[0].productCode} onChange={handleInputChange} ></Form.Control>
+              <Form.Label>Code</Form.Label>
+              <Form.Control type="text" readOnly name="productCode" value={props.modalInfo[0].productCode} onChange={handleInputChange} ></Form.Control>
             </Col>
             <Col>
-              <Form.Label>Product description</Form.Label>
-              <Form.Control type="text" ref={productDescription} defaultValue={props.modalInfo[0].productDescription} onChange={handleInputChange} ></Form.Control>
+              <Form.Label>Description</Form.Label>
+              <Form.Control type="text" name="productDescription" defaultValue={props.modalInfo[0].productDescription} onChange={handleInputChange} ></Form.Control>
             </Col>
             <Col>
               <Form.Label>Price</Form.Label>
-              <Form.Control type="text" ref={price} defaultValue={props.modalInfo[0].price} onChange={handleInputChange} ></Form.Control>
+              <Form.Control type="text" name="price" defaultValue={props.modalInfo[0].price} onChange={handleInputChange} ></Form.Control>
             </Col>
           </Row>
           <br />
           <Row>
             <Col>
               <Form.Label>Status</Form.Label>
-              <Form.Select aria-label="Product status select" defaultValue={props.modalInfo[0].state} ref={state}>
+              <Form.Select aria-label="Product status select" name="state" defaultValue={props.modalInfo[0].state} >
                 <option value="ACTIVE">ACTIVE</option>
                 <option value="DISCONTINUED">DISCONTINUED</option>
               </Form.Select>
             </Col>
             <Col>
               <Form.Label>Creation date</Form.Label>
-              <Form.Control type="date" defaultValue={toDateInputValue(new Date(props.modalInfo[0].creationDate))} ref={creationDate} onChange={handleInputChange} ></Form.Control>
+              <Form.Control type="date" name="creationDate" defaultValue={toDateInputValue(new Date(props.modalInfo[0].creationDate))} onChange={handleInputChange} ></Form.Control>
             </Col>
             <Col>
               <Form.Label>Creator</Form.Label>
-              <Form.Control type="text" defaultValue={props.modalInfo[0].creator} ref={creator} onChange={handleInputChange} ></Form.Control>
+              <Form.Control type="text" name="creator" defaultValue={props.modalInfo[0].creator} onChange={handleInputChange} ></Form.Control>
             </Col>
           </Row>
           <br />

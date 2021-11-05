@@ -80,7 +80,7 @@ const Table = () => {
           <td className='opration'>
             <Button variant="danger" onClick={() => deactivate(productCode)} >Deactivate</Button>
           </td>
-          {show ? <DetailsModalContent show={show} onHide={handleClose} getData={getData} modalInfo={modalInfo} /> : null}
+          {show ? <DetailsModalContent show={show} onHide={handleClose} getData={getData} modalInfo={modalInfo} setModalInfo={setModalInfo} /> : null}
           {createShow ? <CreateModalContent show={createShow} onHide={handleCreateClose} getData={getData} /> : null}
         </tr >
       )
