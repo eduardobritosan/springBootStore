@@ -2,6 +2,7 @@ import React, {useEffect, useRef, useState} from 'react'
 import {Col, Form, Modal, Row, Button} from 'react-bootstrap';
 import ProductService from "../services/product.service";
 import SupplierModalContent from './SupplierModalContent';
+import PriceReductionModalContent from './PriceReductionModalContent';
 
 const DetailsModalContent = (props) => {
 
@@ -11,9 +12,17 @@ const DetailsModalContent = (props) => {
   const handleShow = () => setShow(true);
   const [, setShowModal] = useState([]);
   const [modalInfo, setModalInfo] = useState();
+  const [priceShow, setPriceShow] = useState(false);
+  const handlePriceClose = () => setPriceShow(false);
+  const handlePriceShow = () => setPriceShow(true);
+  const [, setPriceShowModal] = useState([]);
 
   const toggleTrueFalse = () => {
     setShowModal(handleShow);
+  }
+
+  const toggleTrueFalsePrice = () => {
+    setPriceShowModal(handlePriceShow);
   }
 
   const handleInputChange = (event) => {
@@ -40,6 +49,10 @@ const DetailsModalContent = (props) => {
 
   const addSupplier = () => {
     toggleTrueFalse();
+  }
+
+  const addPriceReduction = () => {
+    toggleTrueFalsePrice();
   }
 
   const renderSupplierHeader = () => {
@@ -83,7 +96,7 @@ const DetailsModalContent = (props) => {
 
   if (modalInfo) {
     return (
-      <Modal {...props} dialogClassName="my-modal">
+      <Modal {...props} dialogClassName="my-modal" scrollable={true}>
         <Modal.Header closeButton>
           <Modal.Title>Edit product</Modal.Title>
         </Modal.Header>
@@ -148,10 +161,13 @@ const DetailsModalContent = (props) => {
               {renderPriceRed(modalInfo.priceReductions)}
             </tbody>
           </table>
+          <br />
+          <Button onClick={() => addPriceReduction(modalInfo.productCode)}> Add new price reduction </Button>
         </Modal.Body>
         <Modal.Footer>
         </Modal.Footer>
         {show ? <SupplierModalContent onHide={handleClose} show={show} productCode={modalInfo.productCode} /> : null}
+        {show ? <PriceReductionModalContent onHide={handlePriceClose} show={priceShow} productCode={modalInfo.productCode} /> : null}
       </Modal >
     )
   } else {
