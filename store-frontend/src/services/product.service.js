@@ -24,7 +24,7 @@ const editProduct = (productCode, newProduct) => {
 }
 
 const addSupplier = (productCode, newSupplier) => {
-  return axios.put(API_URL, `/new-supplier/${productCode}`, {headers: authHeader()});
+  return axios.put(API_URL + `/new-supplier/${productCode}`, newSupplier, {headers: authHeader()});
 }
 
 const ProductService = {
