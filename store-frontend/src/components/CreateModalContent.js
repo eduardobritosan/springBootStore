@@ -1,32 +1,22 @@
-import React, {useRef} from 'react'
+import React, {useState} from 'react'
 import {Col, Form, Modal, Row, Button} from 'react-bootstrap';
 import ProductService from "../services/product.service";
 
 const CreateModalContent = (props) => {
 
-  const productDescription = useRef(null);
-  const price = useRef(null);
-  const productCode = useRef(null);
-  const creator = useRef(null);
-  const state = useRef(null);
-  const creationDate = useRef(null);
+  const [modalInfo, setModalInfo] = useState();
 
   const handleSubmit = (event) => {
-    const newProduct = {
-      productCode: productCode.current.value,
-      productDescription: productDescription.current.value,
-      price: price.current.value,
-      state: state.current.value,
-      creationDate: Date.parse(creationDate.current.value),
-      creator: creator.current.value
-    }
-    ProductService.createProduct(newProduct).then(() => {
+    ProductService.createProduct(modalInfo).then(() => {
       props.getData();
     });
   }
 
   const handleInputChange = (event) => {
-    event.preventDefault();
+    setModalInfo((prevState) => ({
+      ...prevState,
+      [event.target.name]: event.target.value
+    }));
   }
 
   return (
@@ -38,34 +28,34 @@ const CreateModalContent = (props) => {
         <Form onSubmit={handleSubmit}>
           <Row>
             <Col>
-              <Form.Label>Product code</Form.Label>
-              <Form.Control type="text" ref={productCode} onChange={handleInputChange} ></Form.Control>
+              <Form.Label>Code</Form.Label>
+              <Form.Control type="text" name="productCode" onChange={handleInputChange} ></Form.Control>
             </Col>
             <Col>
-              <Form.Label>Product description</Form.Label>
-              <Form.Control type="text" ref={productDescription} onChange={handleInputChange} ></Form.Control>
+              <Form.Label>Description</Form.Label>
+              <Form.Control type="text" name="productDescription" onChange={handleInputChange} ></Form.Control>
             </Col>
             <Col>
               <Form.Label>Price</Form.Label>
-              <Form.Control type="text" ref={price} onChange={handleInputChange} ></Form.Control>
+              <Form.Control type="text" name="price" onChange={handleInputChange} ></Form.Control>
             </Col>
           </Row>
           <br />
           <Row>
             <Col>
               <Form.Label>Status</Form.Label>
-              <Form.Select aria-label="Product status select" defaultValue="ACTIVE" ref={state}>
+              <Form.Select aria-label="Status select" defaultValue="ACTIVE" name="state" onChange={handleInputChange} >
                 <option value="ACTIVE">ACTIVE</option>
                 <option value="DISCONTINUED">DISCONTINUED</option>
               </Form.Select>
             </Col>
             <Col>
               <Form.Label>Creation date</Form.Label>
-              <Form.Control type="date" ref={creationDate} defaultValue={toDateInputValue(new Date())} onChange={handleInputChange} ></Form.Control>
+              <Form.Control type="date" name="creationDate" defaultValue={toDateInputValue(new Date())} onChange={handleInputChange} ></Form.Control>
             </Col>
             <Col>
               <Form.Label>Creator</Form.Label>
-              <Form.Control type="text" ref={creator} onChange={handleInputChange} ></Form.Control>
+              <Form.Control type="text" name="creator" onChange={handleInputChange} ></Form.Control>
             </Col>
           </Row>
           <br />

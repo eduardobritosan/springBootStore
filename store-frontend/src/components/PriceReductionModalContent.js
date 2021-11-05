@@ -2,19 +2,19 @@ import React, {useState} from 'react'
 import {Col, Form, Modal, Row, Button} from 'react-bootstrap';
 import ProductService from "../services/product.service";
 
-const SupplierModalContent = (props) => {
+const PriceReductionModalContent = (props) => {
 
-  const [supplier, setSupplier] = useState({});
+  const [priceReduction, setPriceReduction] = useState({});
 
   const handleInputChange = (event) => {
-    setSupplier((prevState) => ({
+    setPriceReduction((prevState) => ({
       ...prevState,
       [event.target.name]: event.target.value
     }));
   }
 
   const handleSubmit = (event) => {
-    ProductService.addSupplier(props.productCode, supplier);
+    ProductService.addPriceReduction(props.productCode, priceReduction);
   }
 
   return (
@@ -26,8 +26,8 @@ const SupplierModalContent = (props) => {
         <Form onSubmit={handleSubmit}>
           <Row>
             <Col>
-              <Form.Label>Supplier code</Form.Label>
-              <Form.Control type="text" name="supplierCode" onChange={handleInputChange} ></Form.Control>
+              <Form.Label>Code</Form.Label>
+              <Form.Control type="text" name="priceReductionCode" onChange={handleInputChange} ></Form.Control>
             </Col>
             <Col>
               <Form.Label>Name</Form.Label>
@@ -51,4 +51,4 @@ const SupplierModalContent = (props) => {
   )
 }
 
-export default SupplierModalContent;
+export default PriceReductionModalContent;
