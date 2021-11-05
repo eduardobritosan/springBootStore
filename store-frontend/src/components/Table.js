@@ -8,7 +8,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 const Table = () => {
   const [products, setProducts] = useState([]);
-  const [modalInfo, setModalInfo] = useState([]);
+  const [selectedProduct, setSelectedProduct] = useState('');
 
   const [, setShowModal] = useState([]);
   const [, setCreateShowModal] = useState([]);
@@ -37,10 +37,8 @@ const Table = () => {
   }
 
   const details = (productCode) => {
-    ProductService.getProductByCode(productCode).then(res => {
-      setModalInfo(res.data);
-      toggleTrueFalse();
-    })
+    setSelectedProduct(productCode);
+    toggleTrueFalse();
   }
 
   const create = () => {
@@ -80,8 +78,6 @@ const Table = () => {
           <td className='opration'>
             <Button variant="danger" onClick={() => deactivate(productCode)} >Deactivate</Button>
           </td>
-          {show ? <DetailsModalContent show={show} onHide={handleClose} getData={getData} modalInfo={modalInfo} setModalInfo={setModalInfo} /> : null}
-          {createShow ? <CreateModalContent show={createShow} onHide={handleCreateClose} getData={getData} /> : null}
         </tr >
       )
     })
@@ -105,6 +101,8 @@ const Table = () => {
           </tr>
         </tfoot>
       </table>
+      {show ? <DetailsModalContent show={show} onHide={handleClose} getData={getData} productCode={selectedProduct} /> : null}
+      {createShow ? <CreateModalContent show={createShow} onHide={handleCreateClose} getData={getData} /> : null}
     </>
   )
 }

@@ -1,28 +1,42 @@
-import React, {useRef, useState} from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 import {Col, Form, Modal, Row, Button} from 'react-bootstrap';
 import ProductService from "../services/product.service";
 import SupplierModalContent from './SupplierModalContent';
 
 const DetailsModalContent = (props) => {
 
+  const hasFetchedData = useRef(false);
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const [, setShowModal] = useState([]);
+  const [modalInfo, setModalInfo] = useState();
 
   const toggleTrueFalse = () => {
     setShowModal(handleShow);
   }
 
   const handleInputChange = (event) => {
-    props.setModalInfo((prevState) => ({...prevState, [event.target.name]: event.target.value}));
+    setModalInfo((prevState) => ({
+      ...prevState,
+      [event.target.name]: event.target.value
+    }));
   }
 
   const handleSubmit = (event) => {
-    ProductService.editProduct(props.modalInfo[0].productCode, props.modalInfo[0]).then(() => {
+    ProductService.editProduct(modalInfo.productCode, modalInfo).then(() => {
       props.getData();
     });
   }
+
+  useEffect(() => {
+    if (!hasFetchedData.current) {
+      ProductService.getProductByCode(props.productCode).then((res) => {
+        setModalInfo(res.data[0]);
+        hasFetchedData.current = true;
+      });
+    }
+  }, [props])
 
   const addSupplier = () => {
     toggleTrueFalse();
@@ -67,78 +81,88 @@ const DetailsModalContent = (props) => {
     });
   }
 
-  return (
-    <Modal {...props} dialogClassName="my-modal">
-      <Modal.Header closeButton>
-        <Modal.Title>Edit product</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <Form onSubmit={handleSubmit}>
-          <Row>
-            <Col>
-              <Form.Label>Code</Form.Label>
-              <Form.Control type="text" readOnly name="productCode" value={props.modalInfo[0].productCode} onChange={handleInputChange} ></Form.Control>
-            </Col>
-            <Col>
-              <Form.Label>Description</Form.Label>
-              <Form.Control type="text" name="productDescription" defaultValue={props.modalInfo[0].productDescription} onChange={handleInputChange} ></Form.Control>
-            </Col>
-            <Col>
-              <Form.Label>Price</Form.Label>
-              <Form.Control type="text" name="price" defaultValue={props.modalInfo[0].price} onChange={handleInputChange} ></Form.Control>
-            </Col>
-          </Row>
+  if (modalInfo) {
+    return (
+      <Modal {...props} dialogClassName="my-modal">
+        <Modal.Header closeButton>
+          <Modal.Title>Edit product</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form onSubmit={handleSubmit}>
+            <Row>
+              <Col>
+                <Form.Label>Code</Form.Label>
+                <Form.Control type="text" readOnly name="productCode" value={modalInfo.productCode} onChange={handleInputChange} ></Form.Control>
+              </Col>
+              <Col>
+                <Form.Label>Description</Form.Label>
+                <Form.Control type="text" name="productDescription" defaultValue={modalInfo.productDescription} onChange={handleInputChange} ></Form.Control>
+              </Col>
+              <Col>
+                <Form.Label>Price</Form.Label>
+                <Form.Control type="text" name="price" defaultValue={modalInfo['price']} onChange={handleInputChange} ></Form.Control>
+              </Col>
+            </Row>
+            <br />
+            <Row>
+              <Col>
+                <Form.Label>Status</Form.Label>
+                <Form.Select aria-label="Product status select" name="state" defaultValue={modalInfo.state} onChange={handleInputChange} >
+                  <option value="ACTIVE">ACTIVE</option>
+                  <option value="DISCONTINUED">DISCONTINUED</option>
+                </Form.Select>
+              </Col>
+              <Col>
+                <Form.Label>Creation date</Form.Label>
+                <Form.Control type="date" name="creationDate" defaultValue={toDateInputValue(new Date(modalInfo.creationDate))} onChange={handleInputChange} ></Form.Control>
+              </Col>
+              <Col>
+                <Form.Label>Creator</Form.Label>
+                <Form.Control type="text" name="creator" defaultValue={modalInfo.creator} onChange={handleInputChange} ></Form.Control>
+              </Col>
+            </Row>
+            <br />
+            <Button type="submit" className="mb-2">
+              Submit
+            </Button>
+          </Form>
+          <hr />
+          <h4>Suppliers</h4>
+          <table id='product'>
+            <thead>
+              <tr>{renderSupplierHeader()}</tr>
+            </thead>
+            <tbody>
+              {renderSuppliers(modalInfo.suppliers)}
+            </tbody>
+          </table>
           <br />
-          <Row>
-            <Col>
-              <Form.Label>Status</Form.Label>
-              <Form.Select aria-label="Product status select" name="state" defaultValue={props.modalInfo[0].state} >
-                <option value="ACTIVE">ACTIVE</option>
-                <option value="DISCONTINUED">DISCONTINUED</option>
-              </Form.Select>
-            </Col>
-            <Col>
-              <Form.Label>Creation date</Form.Label>
-              <Form.Control type="date" name="creationDate" defaultValue={toDateInputValue(new Date(props.modalInfo[0].creationDate))} onChange={handleInputChange} ></Form.Control>
-            </Col>
-            <Col>
-              <Form.Label>Creator</Form.Label>
-              <Form.Control type="text" name="creator" defaultValue={props.modalInfo[0].creator} onChange={handleInputChange} ></Form.Control>
-            </Col>
-          </Row>
-          <br />
-          <Button type="submit" className="mb-2">
-            Submit
-          </Button>
-        </Form>
-        <hr />
-        <h4>Suppliers</h4>
-        <table id='product'>
-          <thead>
-            <tr>{renderSupplierHeader()}</tr>
-          </thead>
-          <tbody>
-            {renderSuppliers(props.modalInfo[0].suppliers)}
-          </tbody>
-        </table>
-        <br />
-        <Button onClick={() => addSupplier(props.modalInfo[0].productCode)}> Add new supplier </Button>
-        <hr />
-        <h4>Price reductions</h4>
-        <table id='product'>
-          <thead>
-            <tr>{renderPriceRedHeader()}</tr>
-          </thead>
-          <tbody>
-            {renderPriceRed(props.modalInfo[0].priceReductions)}
-          </tbody>
-        </table>
-      </Modal.Body>
-      <Modal.Footer>
-      </Modal.Footer>
-      {show ? <SupplierModalContent onHide={handleClose} show={show} productCode={props.modalInfo[0].productCode} /> : null}
-    </Modal >
-  )
+          <Button onClick={() => addSupplier(modalInfo.productCode)}> Add new supplier </Button>
+          <hr />
+          <h4>Price reductions</h4>
+          <table id='product'>
+            <thead>
+              <tr>{renderPriceRedHeader()}</tr>
+            </thead>
+            <tbody>
+              {renderPriceRed(modalInfo.priceReductions)}
+            </tbody>
+          </table>
+        </Modal.Body>
+        <Modal.Footer>
+        </Modal.Footer>
+        {show ? <SupplierModalContent onHide={handleClose} show={show} productCode={modalInfo.productCode} /> : null}
+      </Modal >
+    )
+  } else {
+    return (
+      <Modal>
+        Loading
+      </Modal>
+    )
+
+  }
+
 }
 
 export default DetailsModalContent;
